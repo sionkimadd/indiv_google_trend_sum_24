@@ -1,6 +1,7 @@
 from google_news_fetcher.google_news_fetcher import GoogleNewsFetcher
 from csv_to_xlsx_converter.csv_to_xlsx_converter import ConverterCSVtoXLSX
 from csv_to_txt_converter.csv_to_txt_converter import ConverterCSVtoTXT
+from sentiment_analyzer.sentiment_analyzer import SentimentAnalysis
 
 # Seach word from 1 to 20
 search_word = input("Search word: ")
@@ -14,6 +15,7 @@ if 1 <= len(search_word) <= 20:
         output_csv = (f"{search_word}_articles.csv")
         output_xlsx = (f"{search_word}_articles.xlsx")
         output_txt = (f"{search_word}_articles.txt")
+        output_sentiment_csv = (f"{search_word}_articles_sentiment.csv")
 
         # Fetch articles about the ? from the last ? days
         news_fetcher = GoogleNewsFetcher(search_word, days_back, output_csv)
@@ -30,6 +32,11 @@ if 1 <= len(search_word) <= 20:
         converter = ConverterCSVtoTXT(output_csv, output_txt, encoding='utf-8')
         converter.read_csv()
         converter.write_txt()
+
+        # Analyze title of txt by nltk
+        # Save four scores to CSV
+        sa = SentimentAnalysis(output_txt, output_sentiment_csv)
+        sa.analyze_sentiment()
 
     else:
         print("Date range must be from 1 to 20.")
