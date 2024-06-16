@@ -3,6 +3,8 @@ from csv_to_xlsx_converter.csv_to_xlsx_converter import ConverterCSVtoXLSX
 from csv_to_txt_converter.csv_to_txt_converter import ConverterCSVtoTXT
 from sentiment_analyzer.sentiment_analyzer import SentimentAnalysis
 from datetime_column_inserter.datetime_column_inserter import CSVDatetimeInserter
+from sentiment_plotter.sentiment_plotter import SentimentPlotter
+
 # Seach word from 1 to 20
 search_word = input("Search word: ")
 if 1 <= len(search_word) <= 20:
@@ -38,9 +40,13 @@ if 1 <= len(search_word) <= 20:
         sa = SentimentAnalysis(output_txt, output_sentiment_csv)
         sa.analyze_sentiment()
 
-        # Add four sort of scores CSV with datetime CSV
+        # Insert datetime colum at four score CSV
         insert = CSVDatetimeInserter(output_csv, output_sentiment_csv)
         insert.insert_column('datetime', 'compound', output_sentiment_csv)
+
+        # Plotter four score CSV
+        plotter = SentimentPlotter(output_sentiment_csv)
+        plotter.plot_sentiment()
 
     else:
         print("Date range must be from 1 to 20.")
