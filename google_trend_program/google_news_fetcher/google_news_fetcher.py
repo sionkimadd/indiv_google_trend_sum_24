@@ -4,6 +4,7 @@ import pandas as pd
 from GoogleNews import GoogleNews
 
 class GoogleNewsFetcher:
+    
     def __init__(self, search_word, days_back, output_csv):
         """
         Initialize with search_word, days_back, and output_csv.
