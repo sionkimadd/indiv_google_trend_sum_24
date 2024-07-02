@@ -7,6 +7,7 @@ from csv_to_txt_converter.csv_to_txt_converter import ConverterCSVtoTXT
 from sentiment_analyzer.sentiment_analyzer import SentimentAnalysis
 from datetime_column_inserter.datetime_column_inserter import CSVDatetimeInserter
 from sentiment_plotter.sentiment_plotter import SentimentPlotter
+from data_merger.data_merger import Merger
 
 # List of storage space
 output_csv = None
@@ -142,13 +143,32 @@ def plotter_sentiment_nltk():
         plotter = SentimentPlotter(output_sentiment_csv)
         plotter.plot_sentiment()
 
+def merge_data():
+    """ Merge title compound and datetime column. """
+    global output_csv
+    global output_sentiment_csv
+
+    if output_csv:
+
+        # Rename from .csv to _title_compound_datetime.csv
+        output_merged_data_csv = output_csv.replace('.csv', '_title_compound_datetime.csv')
+        merger = Merger(output_csv, output_sentiment_csv, output_merged_data_csv)
+        merger.merge_title_compound_datetime()
+
+        # Append on list
+        # Insert on listbox (Tkinter)
+        file_list_box(output_merged_data_csv)
+        messagebox.showinfo("Success", f"Title, Compound, Datetime merged and saved as {output_merged_data_csv}!")
+
+            
 def conduct_all():
     """ Conduct all methods. """
-    convert_csv_to_txt()
-    convert_csv_to_xlsx()
-    analyze_sentiment_nltk()
-    insert_datetime()
-    plotter_sentiment_nltk()
+    convert_csv_to_txt() # 1
+    convert_csv_to_xlsx() # 2
+    analyze_sentiment_nltk() # 3
+    insert_datetime() # 4
+    merge_data() # 5
+    plotter_sentiment_nltk() # 6
 
 def download_file():
 

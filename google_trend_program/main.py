@@ -4,6 +4,7 @@ from csv_to_txt_converter.csv_to_txt_converter import ConverterCSVtoTXT
 from sentiment_analyzer.sentiment_analyzer import SentimentAnalysis
 from datetime_column_inserter.datetime_column_inserter import CSVDatetimeInserter
 from sentiment_plotter.sentiment_plotter import SentimentPlotter
+from data_merger.data_merger import Merger
 
 # Seach word from 1 to 20
 search_word = input("Search word: ")
@@ -18,6 +19,7 @@ if 1 <= len(search_word) <= 20:
         output_xlsx = (f"{search_word}_articles.xlsx")
         output_txt = (f"{search_word}_articles.txt")
         output_sentiment_csv = (f"{search_word}_articles_sentiment.csv")
+        output_merged_data_csv = (f"{search_word}_articles_title_compound_datetime.csv")
 
         # Fetch articles about the ? from the last ? days
         news_fetcher = GoogleNewsFetcher(search_word, days_back, output_csv)
@@ -48,6 +50,10 @@ if 1 <= len(search_word) <= 20:
         plotter = SentimentPlotter(output_sentiment_csv)
         plotter.plot_sentiment()
 
+        # Merger data
+        merger = Merger(output_csv, output_sentiment_csv, output_merged_data_csv)
+        merger.merge_title_compound_datetime()
+        
     else:
         print("Date range must be from 1 to 20.")
         
