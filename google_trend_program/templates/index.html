@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trend of World</title>
+</head>
+<body>
+    <h1>Trend of World</h1>
+
+    <!-- Label for search word field -->
+    <label for = "search_word">Search Word:</label>
+    <!-- Field for search word -->
+    <input type = "text" id = "search_word"><br>
+
+    <!-- Label for days_back field -->
+    <label for = "days_back">Days Back:</label>
+    <!-- Field for days_back -->
+    <input type = "text" id = "days_back"><br>
+
+    <!-- Claick button for conductAll() function  -->
+    <button onclick = "conductAll()">All</button>
+
+    <!-- Head for list of Generated Files -->
+    <h2>Generated Files</h2>
+    <!-- Empty file_list -->
+    <ul id = "file_list"></ul>
+
+    <!-- Head for img of Sentiment Analysis Plot -->
+    <h2>Sentiment Analysis Plot</h2>
+    <!-- Display img and hide initial img -->
+    <img id = "sentiment_plot" style = "display: none;">
+
+    <script>
+        function conductAll() {
+            
+            // Bring search_word and days_back value
+            const search_word = document.getElementById('search_word').value;
+            const days_back = document.getElementById('days_back').value;
+
+            // Send POST tp app.py's /conduct_all
+            fetch('/conduct_all', {
+                
+                // HTTP method set POST
+                method: 'POST',
+                
+                // MIME set JSON
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+
+                // Body data for sending sever as JSON 
+                body: JSON.stringify({ search_word, days_back })
+            })
+
+            // Server reponse parsing as JSON
+            .then(response => response.json())
+            // Process parsing JSON data 
+            .then(data => {
+
+                // Select file_list id 
+                const file_list = document.getElementById('file_list');
+                
+                // Clear the previous file list
+                file_list.innerHTML = '';
+                
+                // Circulate generated_files's each file on app.py
+                data.generated_files.forEach(file => {
+                    
+                    // Create item list
+                    const li = document.createElement('li');
+                    
+                    // Create achor
+                    const a = document.createElement('a');
+                    
+                    // Create link for download
+                    a.href = `/download/${file}`;
+
+                    // Name same as file name
+                    a.innerText = file;
+                    
+                    // Add anchor to list item
+                    li.appendChild(a);
+
+                    // Add list item to file list
+                    file_list.appendChild(li);
+                });
+                
+                // Select sentiment_plot id 
+                const plot_img = document.getElementById('sentiment_plot');
+                
+                // Set src to url that recived from server
+                // plot_img.src = data.plot_url;
+                // Added timestamp becuase of cash issue
+                const timestamp = new Date().getTime();
+                plot_img.src = `${data.plot_url}?t=${timestamp}`;
+                
+                // Display img on the page
+                plot_img.style.display = 'block';
+
+                // Alert for fin
+                alert("All processes completed");
+            });
+        }
+    </script>
+    
+</body>
+</html>

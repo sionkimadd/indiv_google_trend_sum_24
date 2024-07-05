@@ -15,3 +15,4 @@
 - Fetch Google news
 - Analyze sentiment
 - Visualize sentiment
+- Web version
